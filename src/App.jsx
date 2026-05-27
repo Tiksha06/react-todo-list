@@ -1,122 +1,65 @@
 import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from './assets/vite.svg'
-import heroImg from './assets/hero.png'
-import './App.css'
 
 function App() {
-  const [count, setCount] = useState(0)
+  // 1. State to track what the user is typing in the input field
+  const [taskInput, setTaskInput] = useState('')
+
+  // 2. State to store the list of tasks
+  const [tasks, setTasks] = useState([])
+
+  // 3. Function to handle adding a new task
+  const handleAddTask = () => {
+    // The .trim() function takes a string and removes all the blank spaces from the beginning and the end of it.
+    if (taskInput.trim() === '') return // Don't add empty tasks
+    setTasks([...tasks, taskInput]) //add new task to array
+    setTaskInput('') // Clear the input field after adding a task
+  }
+
+  // 4. 🆕 Function to delete a task using its index number
+  const handleDeleteTask = (indexToDelete) => {
+    // Filter keeps every task EXCEPT the one matching the clicked index
+    const updatedTasks = tasks.filter((_, index) => index !== indexToDelete)
+    setTasks(updatedTasks)
+  }
 
   return (
-    <>
-      <section id="center">
-        <div className="hero">
-          <img src={heroImg} className="base" width="170" height="179" alt="" />
-          <img src={reactLogo} className="framework" alt="React logo" />
-          <img src={viteLogo} className="vite" alt="Vite logo" />
-        </div>
-        <div>
-          <h1>Get started</h1>
-          <p>
-            Edit <code>src/App.jsx</code> and save to test <code>HMR</code>
-          </p>
-        </div>
-        <button
-          type="button"
-          className="counter"
-          onClick={() => setCount((count) => count + 1)}
-        >
-          Count is {count}
-        </button>
-      </section>
-
-      <div className="ticks"></div>
-
-      <section id="next-steps">
-        <div id="docs">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#documentation-icon"></use>
-          </svg>
-          <h2>Documentation</h2>
-          <p>Your questions, answered</p>
-          <ul>
-            <li>
-              <a href="https://vite.dev/" target="_blank">
-                <img className="logo" src={viteLogo} alt="" />
-                Explore Vite
-              </a>
+    <div style = {{padding: '40px', textAlign: 'center', margin: '0 auto', maxWidth: '400px', fontFamily: 'sans-serif' }}>
+      <h1>📝 My Todo List</h1>
+      <p style= {{color: '#666'}}>Getting back into the consistency groove!</p>
+      {/************ INPUT SECTION *************/}
+      <div style = {{marginTop: '20px', marginBottom: '20px'}}>
+        <input
+          type="text"
+          placeholder="Add a new task..."
+          value={taskInput}
+          onChange={(e) => setTaskInput(e.target.value)}
+          style = {{padding: '10px', width: '200px', marginRight: '8px', borderRadius: '4px', border: '1px solid #ccc' }}
+          />
+          <button 
+          onClick = {handleAddTask}
+          style = {{padding: '10px 20px', backgroundColor: '#219f45ff', fontWeight: 'bold', color: '#fff', border: 'none', borderRadius: '4px', cursor: 'pointer'}}
+          >
+            ADD TASK
+          </button>
+      </div>
+      {/************ TASK LIST DISPLAY*************/}
+      <ul style = {{padding: 0, listStyleType: 'none', textAlign: 'left'}}>
+        {tasks.map((task, index) => (
+          <li key = {index}
+          style = {{padding: '12px', backgroundColor: '#f6f8fa', marginBottom: '8px', borderRadius: '4px', border: '1px solid #e1e4e8', display: 'flex', justifyContent: 'space-between'}}
+          >
+            {task}
+            {/******** 🆕 Delete Button *********/}
+            <button 
+            onClick = {() => handleDeleteTask(index)}
+            style = {{backgroundColor: '#cb2431', color: '#fff', border: 'none', borderRadius: '4px', padding: '5px 10px', cursor: 'pointer' }}>
+              DELETE
+            </button>
             </li>
-            <li>
-              <a href="https://react.dev/" target="_blank">
-                <img className="button-icon" src={reactLogo} alt="" />
-                Learn more
-              </a>
-            </li>
-          </ul>
-        </div>
-        <div id="social">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#social-icon"></use>
-          </svg>
-          <h2>Connect with us</h2>
-          <p>Join the Vite community</p>
-          <ul>
-            <li>
-              <a href="https://github.com/vitejs/vite" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#github-icon"></use>
-                </svg>
-                GitHub
-              </a>
-            </li>
-            <li>
-              <a href="https://chat.vite.dev/" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#discord-icon"></use>
-                </svg>
-                Discord
-              </a>
-            </li>
-            <li>
-              <a href="https://x.com/vite_js" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#x-icon"></use>
-                </svg>
-                X.com
-              </a>
-            </li>
-            <li>
-              <a href="https://bsky.app/profile/vite.dev" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#bluesky-icon"></use>
-                </svg>
-                Bluesky
-              </a>
-            </li>
-          </ul>
-        </div>
-      </section>
-
-      <div className="ticks"></div>
-      <section id="spacer"></section>
-    </>
-  )
+        ))}
+      </ul>
+    </div>
+ )
 }
 
 export default App
