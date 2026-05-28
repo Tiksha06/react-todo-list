@@ -11,7 +11,7 @@ function App() {
   const handleAddTask = () => {
     // The .trim() function takes a string and removes all the blank spaces from the beginning and the end of it.
     if (taskInput.trim() === '') return // Don't add empty tasks
-    setTasks([...tasks, taskInput]) //add new task to array
+    setTasks([...tasks, { text: taskInput, completed: false}]) //add new task to array
     setTaskInput('') // Clear the input field after adding a task
   }
 
@@ -21,6 +21,18 @@ function App() {
     const updatedTasks = tasks.filter((_, index) => index !== indexToDelete)
     setTasks(updatedTasks)
   }
+
+  // 5. Function to handle toggling the completion status of a task
+  const handleToggleComplete = (indexToToggle) => {
+    const updatedTasks = tasks.map((task,index) => {
+      if ( index === indexToToggle) {
+        return { ...task, completed: !task.completed } // Toggle the completed status
+      }
+      return task // Return unchanged tasks
+    })
+    setTasks(updatedTasks) // Update the tasks state with the toggled completion status
+  }
+
 
   return (
     <div style = {{padding: '40px', textAlign: 'center', margin: '0 auto', maxWidth: '400px', fontFamily: 'sans-serif' }}>
@@ -46,9 +58,15 @@ function App() {
       <ul style = {{padding: 0, listStyleType: 'none', textAlign: 'left'}}>
         {tasks.map((task, index) => (
           <li key = {index}
-          style = {{padding: '12px', backgroundColor: '#f6f8fa', marginBottom: '8px', borderRadius: '4px', border: '1px solid #e1e4e8', display: 'flex', justifyContent: 'space-between'}}
+          style = {{padding: '12px', backgroundColor: '#f6f8fa', marginBottom: '8px', borderRadius: '4px', border: '1px solid #e1e4e8', display: 'flex', justifyContent: 'space-between', textDecoration: task.completed ? 'line-through' : 'none', color : task.completed ? '#888' : '#000'}}
           >
-            {task}
+            <input 
+            type = "checkbox"
+            checked = {task.completed}
+            onChange={() => handleToggleComplete(index)}
+            style = {{cursor: 'pointer', marginRight: '10px'}}
+            />
+            {task.text}
             {/******** 🆕 Delete Button *********/}
             <button 
             onClick = {() => handleDeleteTask(index)}
